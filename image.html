@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean & Green | Personal Portfolio</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the clean/green theme */
+        .primary-color { background-color: #047857; } /* Deep Green */
+        .accent-color { color: #10b981; } /* Emerald Green */
+        .bg-subtle { background-color: #f0fdf4; } /* Lightest Green */
+
+        /* Fixed sidebar on desktop */
+        @media (min-width: 1024px) {
+            #nav-panel {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: 280px;
+            }
+            #content-area {
+                margin-left: 280px;
+                /* Ensure main content is scrollable */
+                overflow-y: auto; 
+            }
+        }
+        /* Mobile adjustment for main content when sidebar is fixed */
+        @media (max-width: 1023px) {
+            #content-area {
+                padding-top: 5rem; /* Space below the fixed mobile nav */
+            }
+            #nav-panel {
+                position: fixed;
+                top: 0;
+                height: auto;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+
+        // --- Multi-Page Simulation Logic ---
+
+        // State to track the current page/view
+        let currentPage = 'about';
+
+        /**
+         * Hides all content sections and shows only the one requested,
+         * and updates the active link styling in the sidebar.
+         * @param {string} pageId - The ID of the section to show (e.g., 'about', 'activity-1').
+         */
+        function navigateTo(pageId) {
+            // 1. Hide all content sections
+            document.querySelectorAll('section[data-page]').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // 2. Remove 'active' styling from all links. Note: We target both the primary 'About Me' link and the pill links.
+            document.querySelectorAll('#nav-panel a').forEach(link => {
+                // Remove active classes for 'About Me' primary link
+                link.classList.remove('bg-white/20', 'font-bold');
+                link.classList.add('font-normal');
+                
+                // Remove active classes for the horizontal pills
+                link.classList.remove('bg-white', 'text-gray-900', 'shadow-md');
+                link.classList.add('bg-white/10', 'text-white');
+            });
+
+
+            // 3. Show the target content section
+            const target = document.getElementById(pageId);
+            if (target) {
+                target.classList.remove('hidden');
+                currentPage = pageId;
+                // Scroll to the top of the main content area for the "new page" feel
+                document.getElementById('content-area').scrollTop = 0;
+            }
+            
+            // 4. Add 'active' styling to the clicked link
+            const activeLink = document.querySelector(`#nav-panel a[onclick*="navigateTo('${pageId}')"]`);
+            if (activeLink) {
+                if (pageId === 'about') {
+                    // Specific styling for the primary 'About Me' link
+                    activeLink.classList.add('bg-white/20', 'font-bold');
+                    activeLink.classList.remove('font-normal');
+                } else {
+                    // Specific styling for the activity pill links
+                    activeLink.classList.add('bg-white', 'text-gray-900', 'shadow-md');
+                    activeLink.classList.remove('bg-white/10', 'text-white');
+                }
+            }
+        }
+
+
+        // Initialize: Show the 'about' page on load and set active state
+        document.addEventListener('DOMContentLoaded', () => {
+            navigateTo('about');
+        });
+    </script>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- Main Wrapper -->
+    <div class="lg:flex">
+
+        <!-- Left Navigation Panel (Sidebar on desktop, fixed top bar on mobile) -->
+        <nav id="nav-panel" class="primary-color text-white p-6 shadow-2xl lg:w-72 w-full z-20">
+            <!-- Title / Mobile Header (LEFT aligned, smaller size) -->
+            <div class="text-2xl font-bold mb-4 pb-4 border-b border-white/20 text-left">
+                <span class="block">Clean & Green Portfolio</span>
+                <p class="text-sm opacity-75 mt-1 font-light">Open Elective Projects</p>
+            </div>
+
+            <!-- Navigation Links -->
+            <ul class="space-y-3">
+                <li class="pb-2">
+                    <a href="javascript:void(0)" onclick="navigateTo('about')" class="block py-2 px-3 rounded-md hover:bg-white/10 transition duration-200 font-normal">
+                        <span class="font-semibold text-lg">About Me</span>
+                    </a>
+                </li>
+
+                <!-- Activity Links Panel (Full Line Layout, replacing Core Activities title and old list item) -->
+                <li class="pt-4 border-t border-white/20">
+                    <!-- Use justify-between to space activities left, center, and right across the full width -->
+                    <div class="flex justify-between w-full p-1 text-sm">
+                        <a href="javascript:void(0)" onclick="navigateTo('activity-1')" class="py-1 px-3 rounded-full bg-white/10 text-white hover:bg-white/30 transition duration-200 font-medium whitespace-nowrap">
+                            Activity 1
+                        </a>
+                        <a href="javascript:void(0)" onclick="navigateTo('activity-2')" class="py-1 px-3 rounded-full bg-white/10 text-white hover:bg-white/30 transition duration-200 font-medium whitespace-nowrap">
+                            Activity 2
+                        </a>
+                        <a href="javascript:void(0)" onclick="navigateTo('activity-3')" class="py-1 px-3 rounded-full bg-white/10 text-white hover:bg-white/30 transition duration-200 font-medium whitespace-nowrap">
+                            Activity 3
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main id="content-area" class="flex-1 p-8 lg:p-12 min-h-screen overflow-y-auto">
+
+            <!-- Home/About Section (Visible by default) -->
+            <section id="about" data-page class="mb-16 pt-20 pb-16 border-b border-gray-200">
+                <div class="max-w-4xl">
+                    <h1 class="text-5xl font-extrabold text-gray-900 mb-4">My Clean & Green Portfolio</h1>
+                    <h2 class="text-2xl font-semibold accent-color mb-8">Engineering Sustainable Energy Solutions</h2>
+                    
+                    <!-- Expanded Description for Clean and Green -->
+                    <div class="space-y-6 text-lg leading-relaxed">
+                        <p>
+                            Welcome to my Clean & Green portfolio, a comprehensive showcase developed for my Open Elective subject focusing on sustainable engineering. This subject explores the critical intersection of <strong>environmental stewardship and technological innovation</strong>, specifically concentrating on <strong>decentralized renewable energy systems</strong> and <strong>circular economy models</strong>. My aim is to design practical, resilient solutions that address climate change and energy access challenges simultaneously.
+                        </p>
+                        
+                        <p>
+                            The Clean & Green initiative represents a paradigm shift in how we approach energy production and consumption. Rather than relying on centralized fossil fuel systems that contribute significantly to greenhouse gas emissions, we're exploring distributed renewable energy solutions that can be implemented at various scales - from individual households to entire communities.
+                        </p>
+                        
+                        <h3 class="text-xl font-semibold text-green-700 mt-8 mb-4">The Importance of Sustainable Energy</h3>
+                        
+                        <p>
+                            The transition to clean energy is no longer optional - it's imperative. With global energy demands projected to increase by nearly 50% by 2050, and the urgent need to limit global warming to 1.5°C above pre-industrial levels, developing and implementing sustainable energy solutions has become one of humanity's most critical challenges.
+                        </p>
+                        
+                        <p>
+                            Renewable energy technologies offer multiple benefits beyond carbon reduction:
+                        </p>
+                        
+                        <ul class="list-disc pl-6 space-y-2 mt-4">
+                            <li><strong>Energy Security:</strong> Reducing dependence on imported fossil fuels</li>
+                            <li><strong>Economic Development:</strong> Creating local jobs in installation, maintenance, and manufacturing</li>
+                            <li><strong>Public Health:</strong> Reducing air pollution that causes respiratory illnesses</li>
+                            <li><strong>Resilience:</strong> Building energy systems that can withstand climate disruptions</li>
+                            <li><strong>Energy Access:</strong> Providing electricity to remote and underserved communities</li>
+                        </ul>
+                        
+                        <h3 class="text-xl font-semibold text-green-700 mt-8 mb-4">My Approach to Clean & Green Solutions</h3>
+                        
+                        <p>
+                            Throughout this portfolio, I've adopted a systems-thinking approach to energy design. Rather than focusing on single technologies in isolation, I've explored how different renewable energy sources can complement each other to create robust, reliable systems. This includes:
+                        </p>
+                        
+                        <ul class="list-disc pl-6 space-y-2 mt-4">
+                            <li><strong>Hybrid Systems:</strong> Combining multiple renewable sources to overcome intermittency issues</li>
+                            <li><strong>Energy Storage:</strong> Integrating battery and other storage technologies to ensure continuous power</li>
+                            <li><strong>Circular Principles:</strong> Designing systems where waste outputs become inputs for other processes</li>
+                            <li><strong>Appropriate Scale:</strong> Matching technology solutions to specific community needs and resources</li>
+                            <li><strong>Economic Viability:</strong> Ensuring solutions are financially sustainable without long-term subsidies</li>
+                        </ul>
+                        
+                        <p>
+                            The core of this portfolio consists of three detailed design activities, each tackling a unique aspect of green technology—from providing reliable power for rural infrastructure to transforming agricultural waste into valuable energy and fertilizer. Please use the navigation on the left to explore the detailed block diagrams and technical descriptions of these projects.
+                        </p>
+                        
+                        <p class="text-md leading-relaxed text-gray-600 mt-6">
+                            I hope this portfolio demonstrates not just technical competence, but a genuine commitment to creating energy solutions that are environmentally responsible, economically viable, and socially beneficial. The transition to a clean energy future requires innovation, dedication, and collaboration - qualities I strive to embody in my engineering practice.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Activity 1 Content (Hidden by default) -->
+            <section id="activity-1" data-page class="pt-8 hidden">
+                <div class="max-w-5xl bg-white rounded-xl shadow-lg p-6 lg:p-10">
+                    <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-gray-900">Activity 1: Biogas-Wind Hybrid System for a Rural Health Clinic</h2>
+                    <p class="text-xl accent-color mb-6">Designing Resilient Off-Grid Power.</p>
+
+                    <!-- Block Diagram (Now SVG) -->
+                    <div class="mb-8 border-4 border-dashed border-green-300 rounded-lg p-6 bg-green-50/50 flex flex-col items-center">
+                        <svg viewBox="0 0 800 400" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Background -->
+                            <rect width="800" height="400" fill="#f0fdf4" rx="10"/>
+                            
+                            <!-- Title -->
+                            <text x="400" y="30" font-size="20" font-weight="bold" text-anchor="middle" fill="#047857">Biogas-Wind Hybrid System Block Diagram</text>
+
+                            <!-- Components -->
+                            <rect x="50" y="80" width="120" height="60" fill="#10b981" rx="8"/>
+                            <text x="110" y="115" text-anchor="middle" fill="white" font-size="14">Wind Turbine</text>
+
+                            <rect x="50" y="240" width="120" height="60" fill="#047857" rx="8"/>
+                            <text x="110" y="275" text-anchor="middle" fill="white" font-size="14">Biodigester</text>
+                            
+                            <rect x="250" y="160" width="120" height="60" fill="#059669" rx="8"/>
+                            <text x="310" y="195" text-anchor="middle" fill="white" font-size="14">Microgrid Controller</text>
+
+                            <rect x="450" y="160" width="120" height="60" fill="#14b8a6" rx="8"/>
+                            <text x="510" y="195" text-anchor="middle" fill="white" font-size="14">Battery Storage</text>
+
+                            <rect x="650" y="160" width="120" height="60" fill="#34d399" rx="8"/>
+                            <text x="710" y="195" text-anchor="middle" fill="#047857" font-size="14">AC Load (Clinic)</text>
+
+                            <!-- Lines/Flow (Energy) -->
+                            <line x1="170" y1="110" x2="250" y2="110" stroke="#047857" stroke-width="3" marker-end="url(#arrow)"/>
+                            <text x="210" y="100" text-anchor="middle" fill="#047857" font-size="12">Power</text>
+                            
+                            <line x1="170" y1="270" x2="250" y2="270" stroke="#047857" stroke-width="3" marker-end="url(#arrow)"/>
+                            <text x="210" y="260" text-anchor="middle" fill="#047857" font-size="12">Biogas</text>
+                            
+                            <line x1="370" y1="190" x2="450" y2="190" stroke="#047857" stroke-width="3" marker-end="url(#arrow)"/>
+                            <text x="410" y="180" text-anchor="middle" fill="#047857" font-size="12">DC Bus</text>
+
+                            <line x1="570" y1="190" x2="650" y2="190" stroke="#047857" stroke-width="3" marker-end="url(#arrow)"/>
+                            <text x="610" y="180" text-anchor="middle" fill="#047857" font-size="12">AC Output</text>
+
+                            <!-- Arrowhead definition -->
+                            <defs>
+                                <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+                                    <path d="M0,0 L0,6 L6,3 z" fill="#047857" />
+                                </marker>
+                            </defs>
+                        </svg>
+                        <p class="text-sm mt-3 text-gray-600 italic">Block Diagram: Illustrating the flow from Wind Turbine and Biodigester to the main Microgrid Controller.</p>
+                    </div>
+
+                    <!-- Detailed Explanation -->
+                    <div class="space-y-6 text-base">
+                        <h3 class="text-2xl font-semibold border-b pb-2 mb-4 text-green-700">Source of Energy</h3>
+                        <p>The source of energy for this reliable hybrid system is dual: **wind kinetic energy** captured by the turbine blades and **biomass chemical energy** derived from organic wastes, such as farm manure, which is processed to yield combustible biogas.</p>
+
+                        <h3 class="text-2xl font-semibold border-b pb-2 mb-4 text-green-700">Conversion Process</h3>
+                        <p>The conversion process involves the wind turbine generating variable AC power, which is then rectified and regulated to DC. Simultaneously, a biodigester employs **anaerobic digestion** to convert the biomass into biogas, which fuels a separate generator for electricity production. Both generated power streams are managed by a **Microgrid Controller**, stored in a central battery bank, and inverted to AC.</p>
+
+                        <h3 class="text-2xl font-semibold border-b pb-2 mb-4 text-green-700">System Output</h3>
+                        <p>The primary system output is **stable, high-quality AC electricity** delivered constantly to the rural health clinic's loads, ensuring a continuous supply for critical medical equipment. The system also includes a battery bank that provides stored energy backup, making the power supply highly resilient and dispatchable.</p>
+
+                        <h3 class="text-2xl font-semibold border-b pb-2 mb-4 text-green-700">Real-World Relevance</h3>
+                        <p>The real-world relevance of this system is to provide **uninterrupted, 24/7 power for essential healthcare services** in isolated, off-grid locations. By blending the variable wind resource with the dispatchable biogas resource, it maximizes energy security, which is vital for operating refrigerators for vaccines, lighting, and life-support machinery.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Activity 2 Content (Hidden by default) -->
+            <section id="activity-2" data-page class="pt-8 hidden">
+                <div class="max-w-5xl bg-white rounded-xl shadow-lg p-6 lg:p-10">
+                    <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-gray-900">Activity 2: Dairy Farm Biogas Generation System</h2>
+                    <p class="text-xl accent-color mb-6">Implementing the Circular Economy in Agriculture.</p>
+
+                    <!-- Block Diagram (Now SVG) -->
+                    <div class="mb-8 border-4 border-dashed border-green-300 rounded-lg p-6 bg-green-50/50 flex flex-col items-center">
+                        <svg viewBox="0 0 800 400" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Background -->
+                            <rect width="800" height="400" fill="#f0fdf4" rx="10"/>
+                            
+                            <!-- Title -->
+                            <text x="400" y="30" font-size="20" font-weight="bold" text-anchor="middle" fill="#047857">Dairy Farm Biogas System Block Diagram</text>
+
+                            <!-- Components -->
+                            <rect x="50" y="170" width="120" height="60" fill="#047857" rx="8"/>
+                            <text x="110" y="205" text-anchor="middle" fill="white" font-size="14">Manure Input</text>
+
+                            <rect x="230" y="160" width="120" height="80" fill="#10b981" rx="8"/>
+                            <text x="290" y="190" text-anchor="middle" fill="white" font-size="14">Anaerobic</text>
+                            <text x="290" y="215" text-anchor="middle" fill="white" font-size="14">Digester</text>
+                            
+                            <rect x="420" y="170" width="120" height="60" fill="#059669" rx="8"/>
+                            <text x="480" y="205" text-anchor="middle" fill="white" font-size="14">CHP Generator</text>
+                            
+                            <!-- Outputs -->
+                            <rect x="650" y="80" width="120" height="50" fill="#34d399" rx="8"/>
+                            <text x="710" y="105" text-anchor="middle" fill="#047857" font-size="14">Electricity</text>
+
+                            <rect x="650" y="175" width="120" height="50" fill="#34d399" rx="8"/>
+                            <text x="710" y="200" text-anchor="middle" fill="#047857" font-size="14">Thermal Heat</text>
+
+                            <rect x="420" y="290" width="120" height="50" fill="#14b8a6" rx="8"/>
+                            <text x="480" y="315" text-anchor="middle" fill="white" font-size="14">Digestate</text>
+
+                            <!-- Lines/Flow (Manure -> Digester) -->
+                            <line x1="170" y1="200" x2="230" y2="200" stroke="#047857" stroke-width="3" marker-end="url(#arrow2)"/>
+                            <text x="200" y="190" text-anchor="middle" fill="#047857" font-size="12">Manure</text>
+                            
+                            <!-- Flow (Digester -> Generator) -->
+                            <line x1="350" y1="200" x2="420" y2="200" stroke="#047857" stroke-width="3" marker-end="url(#arrow2)"/>
+                            <text x="385" y="190" text-anchor="middle" fill="#047857" font-size="12">Biogas</text>
+                            
+                            <!-- Flow (Generator -> Outputs) -->
+                            <polyline points="540,200 620,200 620,105 650,105" stroke="#047857" stroke-width="3" fill="none" marker-end="url(#arrow2-p)"/>
+                            <polyline points="540,200 620,200 620,200 650,200" stroke="#047857" stroke-width="3" fill="none" marker-end="url(#arrow2-h)"/>
+
+                            <!-- Flow (Digester -> Digestate) -->
+                            <line x1="290" y1="240" x2="290" y2="315" stroke="#14b8a6" stroke-width="3"/>
+                            <line x1="290" y1="315" x2="420" y2="315" stroke="#14b8a6" stroke-width="3" marker-end="url(#arrow2-d)"/>
+                            <text x="290" y="280" text-anchor="middle" fill="#14b8a6" font-size="12">Slurry</text>
+
+                            <!-- Arrowhead definition -->
+                            <defs>
+                                <marker id="arrow2" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+                                    <path d="M0,0 L0,6 L6,3 z" fill="#047857" />
+                                </marker>
+                                <marker id="arrow2-p" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+                                    <path d="M0,0 L0,6 L6,3 z" fill="#047857" />
+                                </marker>
+                                <marker id="arrow2-h" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+                                    <path d="M0,0 L0,6 L6,3 z" fill="#047857" />
+                                </marker>
+                                <marker id="arrow2-d" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+                                    <path d="M0,0 L0,6 L6,3 z" fill="#14b8a6" />
+                                </marker>
+                            </defs>
+                        </svg>
+                        <p class="text-sm mt-3 text-gray-600 italic">Block Diagram: Illustrating manure flow, anaerobic digestion, and outputs (Energy/Fertilizer).</p>
+                    </div>
+
+                    <!-- Detailed Explanation -->
+                    <div class="space-y-6 text-base">
+                        <h3 class="text-2xl font-semibold border-b pb-2 mb-4 text-green-700">Source of Energy</h3>
+                        <p>The source of energy for this closed-loop farm system is primarily **biomass chemical energy**, obtained from the copious amounts of **cattle manure** produced by a herd of 100, supplemented by other organic farm residues like spoiled feed or crop waste.</p>
+
+                        <h3 class="text-2xl font-semibold border-b pb-2 mb-4 text-green-700">Conversion Process</h3>
+                        <p>The main conversion process is **anaerobic digestion**, where the manure is fed into a sealed reactor (digester) where specialized bacteria break down the organic matter without oxygen, releasing a flammable gas called **biogas**. This biogas is typically cleaned to remove corrosive elements and then fed into a **Biogas Generator** for Combined Heat and Power (CHP) production.</p>
+
+                        <h3 class="text-2xl font-semibold border-b pb-2 mb-4 text-green-700">System Output</h3>
+                        <p>The versatile system output includes **electricity and heat** to meet the farm's operational needs (e.g., lighting, milking machines), clean **biomethane** that can be compressed for vehicle fuel, and nutrient-dense liquid and solid **digestate** used directly as bio-slurry or processed into organic fertilizer.</p>
+
+                        <h3 class="text-2xl font-semibold border-b pb-2 mb-4 text-green-700">Real-World Relevance</h3>
+                        <p>The real-world relevance is that this system turns a significant farm waste management problem into an **economic asset**. It enables the dairy farm to achieve **energy independence**, substantially reduces greenhouse gas emissions (by capturing methane), and creates a sustainable, low-cost source of high-quality organic **fertilizer**, improving farm profitability and environmental performance.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Activity 3 Content (Hidden by default) -->
+            <section id="activity-3" data-page class="pt-8 hidden">
+                <div class="max-w-5xl bg-white rounded-xl shadow-lg p-6 lg:p-10">
+                    <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-gray-900">Activity 3: Microgrid Integrating Solar PV, Wind, and Biomass</h2>
+                    <p class="text-xl accent-color mb-6">Designing Multi-Source Energy Resilience for Communities.</p>
+
+                    <!-- Block Diagram (Now SVG) -->
+                    <div class="mb-8 border-4 border-dashed border-green-300 rounded-lg p-6 bg-green-50/50 flex flex-col items-center">
+                        <svg viewBox="0 0 800 400" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Background -->
+                            <rect width="800" height="400" fill="#f0fdf4" rx="10"/>
+                            
+                            <!-- Title -->
+                            <text x="400" y="30" font-size="20" font-weight="bold" text-anchor="middle" fill="#047857">Integrated Renewable Microgrid Block Diagram</text>
+
+                            <!-- Sources -->
+                            <rect x="30" y="70" width="120" height="50" fill="#fcd34d" rx="8"/>
+                            <text x="90" y="100" text-anchor="middle" fill="#047857" font-size="14">Solar PV</text>
+
+                            <rect x="30" y="160" width="120" height="50" fill="#10b981" rx="8"/>
+                            <text x="90" y="190" text-anchor="middle" fill="white" font-size="14">Wind Turbine</text>
+                            
+                            <rect x="30" y="250" width="120" height="50" fill="#047857" rx="8"/>
+                            <text x="90" y="280" text-anchor="middle" fill="white" font-size="14">Biomass Gen.</text>
+
+                            <!-- DC Bus & BESS -->
+                            <rect x="250" y="130" width="100" height="140" fill="#d1fae5" stroke="#059669" stroke-width="2" rx="5"/>
+                            <text x="300" y="145" text-anchor="middle" fill="#047857" font-size="14">DC BUS</text>
+
+                            <rect x="400" y="160" width="100" height="50" fill="#14b8a6" rx="8"/>
+                            <text x="450" y="190" text-anchor="middle" fill="white" font-size="14">BESS</text>
+                            
+                            <!-- AC Bus & Load -->
+                            <rect x="580" y="130" width="100" height="140" fill="#f0fdf4" stroke="#059669" stroke-width="2" rx="5"/>
+                            <text x="630" y="145" text-anchor="middle" fill="#047857" font-size="14">AC BUS</text>
+
+                            <rect x="710" y="170" width="70" height="50" fill="#34d399" rx="8"/>
+                            <text x="745" y="200" text-anchor="middle" fill="#047857" font-size="14">LOAD</text>
+
+                            <!-- Converter (DC/AC) -->
+                            <rect x="520" y="175" width="40" height="20" fill="#059669" rx="3"/>
+                            <text x="540" y="190" text-anchor="middle" fill="white" font-size="12">I/C</text>
+                            
+                            <!-- Flow Lines -->
+                            <line x1="150" y1="95" x2="250" y2="150" stroke="#047857" stroke-width="2" marker-end="url(#arrow3)"/>
+                            <text x="190" y="110" text-anchor="middle" fill="#047857" font-size="10">DC</text>
+                            
+                            <line x1="150" y1="185" x2="250" y2="185" stroke="#047857" stroke-width="2" marker-end="url(#arrow3)"/>
+                            <text x="200" y="175" text-anchor="middle" fill="#047857" font-size="10">DC</text>
+
+                            <line x1="150" y1="275" x2="250" y2="250" stroke="#047857" stroke-width="2" marker-end="url(#arrow3)"/>
+                            <text x="190" y="270" text-anchor="middle" fill="#047857" font-size="10">DC</text>
+                            
+                            <!-- DC Bus to BESS -->
+                            <line x1="350" y1="185" x2="400" y2="185" stroke="#14b8a6" stroke-width="2" marker-end="url(#arrow3-b)"/>
+
+                            <!-- DC Bus to AC Bus (via Inverter/Converter) -->
+                            <line x1="350" y1="185" x2="520" y2="185" stroke="#059669" stroke-width="2"/>
+                            <line x1="560" y1="185" x2="580" y2="185" stroke="#059669" stroke-width="2" marker-end="url(#arrow3)"/>
+                            
+                            <!-- AC Bus to Load -->
+                            <line x1="680" y1="185" x2="710" y2="195" stroke="#047857" stroke-width="2" marker-end="url(#arrow3)"/>
+
+                            <!-- Arrowhead definitions -->
+                            <defs>
+                                <marker id="arrow3" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+                                    <path d="M0,0 L0,6 L6,3 z" fill="#047857" />
+                                </marker>
+                                <marker id="arrow3-b" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+                                    <path d="M0,0 L0,6 L6,3 z" fill="#14b8a6" />
+                                </marker>
+                            </defs>
+                        </svg>
+                        <p class="text-sm mt-3 text-gray-600 italic">Block Diagram: Showing the integration points of PV, Wind, Biomass, and BESS on a shared AC/DC Bus.</p>
+                    </div>
+                    <!-- Detailed Explanation -->
+                    <div class="space-y-6 text-base">
+                        <h3 class="text-2xl font-semibold border-b pb-2 mb-4 text-green-700">Source of Energy</h3>
+                        <p>The comprehensive source of energy for this microgrid is a blend of three renewables: **solar radiation** captured by the PV array, **wind kinetic energy** harnessed by the turbines, and **biomass chemical energy** converted via a gasifier/generator set.</p>
+
+                        <h3 class="text-2xl font-semibold border-b pb-2 mb-4 text-green-700">Conversion Process</h3>
+                        <p>The core conversion process integrates these sources: Solar PV directly produces DC power; the wind and biomass systems produce power that is ultimately rectified and combined with the PV input on a **DC Bus**. A bi-directional inverter manages the flow between the DC storage (batteries) and the **AC Bus**, where the community loads are connected, ensuring stable voltage and frequency.</p>
+
+                        <h3 class="text-2xl font-semibold border-b pb-2 mb-4 text-green-700">System Output</h3>
+                        <p>The primary system output is a highly resilient and reliable **supply of AC electricity** to power all community demands, encompassing both critical loads (e.g., water pumping, healthcare) and non-critical residential and commercial loads. A **Battery Energy Storage System (BESS)** provides ride-through capability and stability.</p>
+
+                        <h3 class="text-2xl font-semibold border-b pb-2 mb-4 text-green-700">Real-World Relevance</h3>
+                        <p>The real-world relevance of such a microgrid is its ability to provide **total energy autonomy and security for remote communities** that are either too expensive or technically difficult to connect to the main utility grid. By utilizing a diverse renewable portfolio, it ensures a constant power supply regardless of short-term weather fluctuations, significantly improving the quality of life and supporting local economic development.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>
